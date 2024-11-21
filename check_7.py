@@ -176,8 +176,8 @@ with DAG(dag_id="Sprin4_Task71", schedule_interval="@daily", default_args=defaul
 
         sql_check = SQLCheckOperator(task_id="user_order_log_isNull", sql="user_order_log_isNull_check.sql" , on_success_callback = check_success_insert_user_order_log, on_failure_callback =  check_failure_insert_user_order_log )
         sql_check2 = SQLCheckOperator(task_id="user_activity_log_isNull", sql="user_activity_log_isNull_check.sql", on_success_callback = check_success_insert_user_activity_log, on_failure_callback =  check_failure_insert_user_activity_log )
-        sql_check3 = SQLValueCheckOperator(task_id="check_row_count_user_order_log", sql="Select count(distinct(customer_id)) from user_order_log", pass_value=3)
-        sql_check4 = SQLValueCheckOperator(task_id="check_row_count_user_activity_log", sql="Select count(distinct(customer_id)) from user_activity_log", pass_value=3)    
+        sql_check3 = SQLValueCheckOperator(task_id="check_row_count_user_order_log", sql="Select count(distinct(customer_id)) from user_order_log", pass_value=3, on_success_callback = check_success_insert_user_order_log2, on_failure_callback =  check_failure_insert_user_order_log2)
+        sql_check4 = SQLValueCheckOperator(task_id="check_row_count_user_activity_log", sql="Select count(distinct(customer_id)) from user_activity_log", pass_value=3, on_success_callback = check_success_insert_user_activity_log2, on_failure_callback =  check_failure_insert_user_activity_log2)  
         load_user_order_log >> [sql_check , sql_check3 ]
         load_user_activity_log >> [ sql_check2 , sql_check4 ]
     end = DummyOperator(task_id="end")
